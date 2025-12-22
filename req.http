@@ -1,0 +1,30 @@
+### YAML UPLOAD
+POST http://localhost:8080/spec
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="spec"; filename="user.spec.yml"
+Content-Type: application/x-yaml
+
+entity: User
+table: users
+
+fields:
+  id:
+    type: uuid
+    primary: true
+  email:
+    type: string
+    unique: true
+  passwordHash:
+    type: string
+  age:
+    type: int
+    nullable: true
+
+create: true
+read: true
+update: true
+delete: true
+
+--boundary--

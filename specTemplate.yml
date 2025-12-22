@@ -1,0 +1,20 @@
+entity: User
+table: users
+
+fields:
+  id:
+    type: uuid
+    primary: true
+  email:
+    type: string
+    unique: true
+  passwordHash:
+    type: string
+  age:
+    type: int
+    nullable: true
+
+create: true
+read: true
+update: true
+delete: true
