@@ -1,7 +1,5 @@
 package com.example.specgen.writer;
 
-//import java.util.StringBuilder;
-
 public class PostgresSqlWriter{
 	
 	private final StringBuilder stringFile;
@@ -14,8 +12,12 @@ public class PostgresSqlWriter{
 		stringFile.append("CREATE TABLE ").append(table).append(" (\n");
 	}
 
-	public void addField(String name, String type, String flag){
-		stringFile.append("\t").append(name).append(" ").append(type).append(" ").append(flag).append(",\n");
+	public void addField(String name, String type, String property){
+		stringFile.append("\t").append(name).append(" ").append(type);
+		if(!property.isEmpty()){
+			stringFile.append(" ").append(property);
+		}
+		stringFile.append(",\n");
 	}
 
 	public void closeTable(){
