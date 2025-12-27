@@ -6,16 +6,19 @@ public class PostgresSqlFormatter {
 
 	public String getPostgressSqlType(Field field){
 		String type = field.getType().strip().toLowerCase();
-		System.out.println("TYPE is "+type);
+		
 		String pgsqlType = "";
 
-		//string = TEXT, uuid = UUID, BOOLEAN
-		if (type.equals("string") || type.equals("uuid") || type.equals("boolean")){
+		
+		if (type.equals("uuid") || type.equals("boolean")){
 			pgsqlType = type.toUpperCase();
 		}
 		// int or integer = INTEGER
 		else if (type.equals("int") || type.equals("integer")) {
 			pgsqlType = "INTEGER";
+		}
+		else if (type.equals("string")){
+			pgsqlType = "TEXT";
 		}
 		//BIGINT
 		//SERIAL

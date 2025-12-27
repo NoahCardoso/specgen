@@ -2,9 +2,13 @@ package com.example.specgen.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.specgen.generator.Generator;
 import com.example.specgen.generator.PostgresSqlGenerator;
+import com.example.specgen.generator.EntityGenerator;
 import com.example.specgen.model.Entity;
 import com.example.specgen.parser.YamlParser;
+
+
 @Service
 public class SpecService{
 
@@ -25,8 +29,11 @@ public class SpecService{
     }
 
     public void generate(Entity spec){
-        PostgresSqlGenerator generator = new PostgresSqlGenerator(spec);
-        System.out.println(generator.generate());
+        Generator pgsqlGenerator = new PostgresSqlGenerator(spec);
+        Generator entityGenerator = new EntityGenerator(spec);
+        pgsqlGenerator.generate();
+        entityGenerator.generate();
+        //controllerGenerator.generate();
     }
 
     private static class InvalidSpecException extends RuntimeException {
@@ -34,6 +41,8 @@ public class SpecService{
         public InvalidSpecException(String missing_entity_name) {
         }
     }
+
+    
 
     
 
