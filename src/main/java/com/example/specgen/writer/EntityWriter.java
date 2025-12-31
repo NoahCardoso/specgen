@@ -10,7 +10,7 @@ public class EntityWriter{
 	}
 	//Create class // handles @ and imports and public class _ {}
 	public void createClass(String entity, String table){
-		stringFile.insert(0, "@Entity\n@Table(name = \""+table+"\")\npublic class"+entity+" {\n");
+		stringFile.insert(0, "@Entity\n@Table(name = \""+table+"\")\npublic class "+entity+" {\n");
 		stringFile.append("}\n");
 	}
 	//maybe constructor's????
@@ -51,14 +51,14 @@ public class EntityWriter{
 		return stringFile.toString();
 	}
 
-	public boolean toFile(String fileName){
+	public boolean toFile(String filename){
 		
         try {
-            File file = new File(fileName);
+            File file = new File(filename);
             if (file.createNewFile()) {          
                 //Created
                 try {
-                    FileWriter myWriter = new FileWriter(fileName);
+                    FileWriter myWriter = new FileWriter(filename);
                     myWriter.write(this.stringFile.toString());
                     myWriter.close();  // must close manually
                     return true;

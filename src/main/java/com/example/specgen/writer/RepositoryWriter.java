@@ -1,33 +1,23 @@
 package com.example.specgen.writer;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class PostgresSqlWriter{
+public class RepositoryWriter{
 	
 	private final StringBuilder stringFile;
 
-	public PostgresSqlWriter(StringBuilder stringFile){
+	public RepositoryWriter(StringBuilder stringFile){
 		this.stringFile = stringFile;
 	}
 
-	public void createTable(String table){
-		stringFile.append("CREATE TABLE ").append(table).append(" (\n");
+	public void createRepository(String entity, String primaryType){
+		stringFile.append("import org.springframework.data.jpa.repository.JpaRepository;\n")
+		.append("public interface "+entity+"Repository extends JpaRepository<"+entity+", "+primaryType+"> {}\n");
 	}
 
-	public void addField(String name, String type, String property){
-		stringFile.append("\t").append(name).append(" ").append(type);
-		if(!property.isEmpty()){
-			stringFile.append(" ").append(property);
-		}
-		stringFile.append(",\n");
-	}
-
-	public void closeTable(){
-		stringFile.append(");\n");
-	}
-
-	public String getStringFile(){
+    public String getStringFile(){
 		return stringFile.toString();
 	}
 
@@ -56,6 +46,4 @@ public class PostgresSqlWriter{
     	return false;
     
 	}
-
-
 }

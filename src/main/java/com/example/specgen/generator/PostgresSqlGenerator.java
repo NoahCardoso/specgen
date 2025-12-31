@@ -7,8 +7,9 @@ import com.example.specgen.writer.PostgresSqlWriter;
 public class PostgresSqlGenerator implements Generator{
 	
 	private final Entity spec;
-	private final String fileName = "schema.sql";
-
+	private final String filename = "schema.sql";
+	private String content;
+	
 	public PostgresSqlGenerator(Entity spec){
 		this.spec = spec;
 	}
@@ -24,7 +25,20 @@ public class PostgresSqlGenerator implements Generator{
 			writer.addField(key, formatter.getPostgressSqlType(field), formatter.getProstgressSqlProperty(field));
 		}
 		writer.closeTable();
-		writer.toFile(fileName);
+		this.content = writer.getStringFile();
+	}
+
+	@Override
+	public String getContent(){
+		if (content.isEmpty()){
+			//error
+		}
+		return content;
+	}
+
+	@Override
+	public String getName(){
+		return filename;
 	}
 
 }
