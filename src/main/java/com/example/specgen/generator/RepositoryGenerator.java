@@ -24,14 +24,12 @@ public class RepositoryGenerator implements Generator{
 		for (String key: spec.getFields().keySet()){
 			Field field = spec.getFields().get(key);
 			if (field.isPrimary()){
-				primaryKeyType = jf.getJavaType(field);
+				primaryKeyType = jf.toNonPrimitiveType(jf.getJavaType(field));
 			}
 
 		}
-		if (primaryKeyType.isEmpty()){
-			//error
-		}
-		writer.createRepository(spec.getEntity(), primaryKeyType);
+		
+		writer.createRepository(spec.getMvnPackage(), spec.getEntity(), primaryKeyType);
 
 		this.content = writer.getStringFile();
 		

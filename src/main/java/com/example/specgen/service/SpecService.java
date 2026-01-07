@@ -13,23 +13,26 @@ import com.example.specgen.generator.PostgresSqlGenerator;
 import com.example.specgen.generator.RepositoryGenerator;
 import com.example.specgen.model.Entity;
 import com.example.specgen.parser.YamlParser;
+import com.example.specgen.validator.SpecValidator;
+
 @Service
 public class SpecService{
 
-    public Map<String,String> process(String yaml) {
+    public Map<String,String> process(String yaml) throws Exception{
         Entity spec = YamlParser.parse(yaml);
-        validate(spec);
+        if (validate(spec)){
+            throw new Exception("Invalid yaml format");
+        }
 
         return generate(spec);
 
     }
 
     //TODO
-    public void validate(Entity spec) throws InvalidSpecException{
-        //need to enure they dont give me sql injects or smt
-        if (spec.getEntity() == null) {
-            throw new InvalidSpecException("Missing entity name");
-        }
+    public boolean validate(Entity spec) throws Exception{
+        SpecValidator validator = new SpecValidator(spec);
+        return validator.check();
+        
     }
 
     public Map<String,String> generate(Entity spec){
@@ -50,18 +53,5 @@ public class SpecService{
         return files;
 
     }
-
-    private static class InvalidSpecException extends RuntimeException {
-
-        public InvalidSpecException(String missing_entity_name) {
-        }
-    }
-
-    
-
-    
-
-
-
     
 }

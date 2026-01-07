@@ -1,0 +1,22 @@
+entity: User
+table: users
+
+fields:
+  id:
+    type: long
+    primary: true
+  email:
+    type: rick
+    unique: true
+  passwordHash:
+    type: String
+  age:
+    type: int
+    nullable: true
+
+create: true
+read: true
+update: true
+delete: true
+
+package: specgen

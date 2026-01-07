@@ -24,9 +24,28 @@ public class JavaFormatter{
 			javaType = "String";
 		}
 		
-		if (javaType.isEmpty()){
-			//error
+		return javaType;
+		
+	}
+	public String toNonPrimitiveType(String type){
+		type.strip();
+		if(type.isBlank() || type.isEmpty()){
+			return type;
 		}
+		String javaType = "";
+		if (type.equals("int")){
+			javaType = "Integer";
+		}
+		else if (type.equals("char")){
+			javaType = "Character";
+		}
+		else if (type.equals("boolean")){
+			javaType = "Boolean";
+		}
+		else if (type.equals("long")){
+			javaType = "Long";
+		}
+		
 		return javaType;
 		
 	}

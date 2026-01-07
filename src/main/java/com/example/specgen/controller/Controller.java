@@ -3,7 +3,11 @@ package com.example.specgen.controller;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.example.specgen.service.SpecService;
-
-import java.util.zip.*;
-
-import org.springframework.http.HttpHeaders;
 @RestController
 @RequestMapping("/spec")
 public class Controller {
@@ -34,32 +34,39 @@ public class Controller {
 
 		String yaml = new String(file.getBytes(), StandardCharsets.UTF_8);
 
-		// parse yaml here
-		System.out.println(yaml);
-		Map<String,String> generatedStringFiles = service.process(yaml);
-		
-		StreamingResponseBody stream = outputStream -> {
-			try (ZipOutputStream zip = new ZipOutputStream(outputStream)) {
-				for(String filename: generatedStringFiles.keySet()){
-					String content = generatedStringFiles.get(filename);
-					ZipEntry entry = new ZipEntry(filename);
+		try {
+            // Assuming `service.process(yaml)` generates a Map of filenames and their respective content
+            Map<String, String> generatedStringFiles = service.process(yaml);
+            
+            StreamingResponseBody stream = outputStream -> {
+                try (ZipOutputStream zip = new ZipOutputStream(outputStream)) {
+                    // Loop through generated files and add them to the zip output stream
+                    for (Map.Entry<String, String> entry : generatedStringFiles.entrySet()) {
+                        String filename = entry.getKey();
+                        String content = entry.getValue();
 
-					zip.putNextEntry(entry);
+                        ZipEntry zipEntry = new ZipEntry(filename);
+                        zip.putNextEntry(zipEntry);
+                        zip.write(content.getBytes(StandardCharsets.UTF_8));
+                        zip.closeEntry();
+                    }
+                } catch (IOException e) {
+                    
+                    throw new RuntimeException("Error writing zip output");
+                }
+            };
 
-					zip.write(content.getBytes(StandardCharsets.UTF_8));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"export.zip\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(stream);
 
-					zip.closeEntry();
-				}
-			}
-		};
-
-
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION,
-						"attachment; filename=\"export.zip\"")
-				.contentType(MediaType.APPLICATION_OCTET_STREAM)
-				.body(stream);
-	}
+        } catch (Exception e) {
+        
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(outputStream -> outputStream.write(e.toString().getBytes()));
+        }
+    }
 
 	
 

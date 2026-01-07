@@ -11,6 +11,7 @@ public class Entity{
 	private boolean read;
 	private boolean update;
 	private boolean delete;
+	private String mvnPackage;
 
     public Entity(){}
 
@@ -73,6 +74,14 @@ public class Entity{
 	public void setDelete(boolean delete){
 		this.delete = delete;
 	}
+
+	public String getMvnPackage() {
+        return mvnPackage;
+    }
+
+    public void setPackage(String mvnPackage) {
+        this.mvnPackage = mvnPackage;
+    }
 
 	
 }

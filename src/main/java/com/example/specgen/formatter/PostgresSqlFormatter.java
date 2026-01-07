@@ -21,13 +21,13 @@ public class PostgresSqlFormatter {
 			pgsqlType = "TEXT";
 		}
 		//BIGINT
+		else if (type.equals("long")){
+			pgsqlType = "BIGINT";
+		}
 		//SERIAL
 		//BIGSERIAL
 		//TIME?
 
-		if(pgsqlType.isEmpty()){
-			//error
-		}
 		return pgsqlType;
 
 	}
@@ -44,9 +44,6 @@ public class PostgresSqlFormatter {
 			pgsqlProperty = "NOT NULL";
 		}
 
-		if (pgsqlProperty.isEmpty()){
-			//error
-		}
 		return pgsqlProperty;
 	}
 }

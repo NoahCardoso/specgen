@@ -3,13 +3,13 @@ table: users
 
 fields:
   id:
-    type: uuid
+    type: long
     primary: true
   email:
-    type: string
+    type: String
     unique: true
   passwordHash:
-    type: string
+    type: String
   age:
     type: int
     nullable: true
@@ -18,3 +18,5 @@ create: true
 read: true
 update: true
 delete: true
+
+package: specgen

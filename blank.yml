@@ -1,0 +1,22 @@
+entity:  
+table:  
+
+fields:
+  id:
+    type:  
+    primary: true
+  email:
+    type:  
+    unique: true
+  passwordHash:
+    type:  
+  age:
+    type:  
+    nullable: true
+
+create: true
+read: true
+update: true
+delete: true
+
+package:  

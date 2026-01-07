@@ -36,13 +36,26 @@ public class ControllerGenerator implements Generator{
 			//error
 		}
 
-		writer.addCreateRoute(spec.getEntity());
-		writer.addGetAllRoute(spec.getEntity());
-		writer.addGetOneRoute(spec.getEntity(), primaryKeyType, primaryKey);
-		writer.addUpdateRoute(spec.getEntity(), primaryKeyType, primaryKey);
-		writer.addDeleteRoute(spec.getEntity(), primaryKeyType, primaryKey);
-
-		writer.createClass(spec.getEntity(), spec.getTable());
+		//C
+		if (spec.isCreate()){
+			writer.addCreateRoute(spec.getEntity());
+		}
+		//R
+		if (spec.isRead()){
+			writer.addGetAllRoute(spec.getEntity());
+			writer.addGetOneRoute(spec.getEntity(), primaryKeyType, primaryKey);
+		}
+		//U
+		if (spec.isUpdate()){
+			writer.addUpdateRoute(spec.getEntity(), primaryKeyType, primaryKey, spec.getFields());
+		}
+		
+		//D
+		if(spec.isDelete()){
+			writer.addDeleteRoute(spec.getEntity(), primaryKeyType, primaryKey);
+		}
+		
+		writer.createClass(spec.getMvnPackage(), spec.getEntity(), spec.getTable());
 		this.content = writer.getStringFile();
 	}
 

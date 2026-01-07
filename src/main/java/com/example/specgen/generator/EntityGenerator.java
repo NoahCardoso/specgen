@@ -16,6 +16,7 @@ public class EntityGenerator implements Generator{
 		EntityWriter writer = new EntityWriter(new StringBuilder());
 		JavaFormatter jf = new JavaFormatter();
 		this.filename = spec.getEntity() + ".java";
+		writer.addConstructor();
 		for (String key: spec.getFields().keySet()){
 			Field field = spec.getFields().get(key);
 			String type = jf.getJavaType(field);
@@ -24,7 +25,7 @@ public class EntityGenerator implements Generator{
 			writer.addSetter(type, key);
 
 		}
-		writer.createClass(spec.getEntity(), spec.getTable());
+		writer.createClass(spec.getMvnPackage(), spec.getEntity(), spec.getTable());
 		this.content = writer.getStringFile();
 
 	}
