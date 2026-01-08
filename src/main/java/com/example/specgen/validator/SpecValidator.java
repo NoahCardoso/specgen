@@ -1,7 +1,7 @@
 package com.example.specgen.validator;
 
 import com.example.specgen.formatter.JavaFormatter;
-import com.example.specgen.formatter.PostgresSqlFormatter;
+import com.example.specgen.formatter.PostgreSqlFormatter;
 import com.example.specgen.model.Entity;
 
 public class SpecValidator{
@@ -14,7 +14,7 @@ public class SpecValidator{
 
 	public boolean check() throws Exception{
 		try {
-			if(!(spec.getEntity().matches("[A-Z]+[a-z0-9]*"))){
+			if(!(spec.getName().matches("[A-Z]+[a-z0-9]*"))){
 				throw new Exception("Invalid entity name");
 			}
 		} catch (Exception e) {
@@ -57,8 +57,8 @@ public class SpecValidator{
 				throw new Exception("Unsupported type in java");
 			}
 
-			PostgresSqlFormatter pf = new PostgresSqlFormatter();
-			type = pf.getPostgressSqlType(spec.getFields().get(key));
+			PostgreSqlFormatter pf = new PostgreSqlFormatter();
+			type = pf.getPostgreSqlType(spec.getFields().get(key));
 			if(type.isBlank()){
 				throw new Exception("Unsupported type in PgSql");
 			}

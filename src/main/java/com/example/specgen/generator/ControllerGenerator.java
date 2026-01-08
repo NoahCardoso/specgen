@@ -17,9 +17,9 @@ public class ControllerGenerator implements Generator{
 	public void generate(){
 		ControllerWriter writer = new ControllerWriter(new StringBuilder());
 		JavaFormatter jf = new JavaFormatter();
-		this.filename = spec.getEntity() + "Controller.java";
-		writer.addRepo(spec.getEntity());
-		writer.addConstructor(spec.getEntity());
+		this.filename = spec.getName() + "Controller.java";
+		writer.addRepo(spec.getName());
+		writer.addConstructor(spec.getName());
 
 		String primaryKeyType = "";
 		String primaryKey = "";
@@ -32,46 +32,36 @@ public class ControllerGenerator implements Generator{
 
 		}
 
-		if(primaryKeyType.equals("") || primaryKey.equals("")){
-			//error
-		}
-
 		//C
 		if (spec.isCreate()){
-			writer.addCreateRoute(spec.getEntity());
+			writer.addCreateRoute(spec.getName());
 		}
 		//R
 		if (spec.isRead()){
-			writer.addGetAllRoute(spec.getEntity());
-			writer.addGetOneRoute(spec.getEntity(), primaryKeyType, primaryKey);
+			writer.addGetAllRoute(spec.getName());
+			writer.addGetOneRoute(spec.getName(), primaryKeyType, primaryKey);
 		}
 		//U
 		if (spec.isUpdate()){
-			writer.addUpdateRoute(spec.getEntity(), primaryKeyType, primaryKey, spec.getFields());
+			writer.addUpdateRoute(spec.getName(), primaryKeyType, primaryKey, spec.getFields());
 		}
 		
 		//D
 		if(spec.isDelete()){
-			writer.addDeleteRoute(spec.getEntity(), primaryKeyType, primaryKey);
+			writer.addDeleteRoute(spec.getName(), primaryKeyType, primaryKey);
 		}
 		
-		writer.createClass(spec.getMvnPackage(), spec.getEntity(), spec.getTable());
+		writer.createClass(spec.getMvnPackage(), spec.getName(), spec.getTable());
 		this.content = writer.getStringFile();
 	}
 
 	@Override
 	public String getContent(){
-		if (content.isEmpty()){
-			//error
-		}
 		return content;
 	}
 
 	@Override
 	public String getName(){
-		if (filename.isEmpty()){
-			//error
-		}
 		return filename;
 	}
 	

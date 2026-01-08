@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.specgen.generator.ControllerGenerator;
 import com.example.specgen.generator.EntityGenerator;
 import com.example.specgen.generator.Generator;
-import com.example.specgen.generator.PostgresSqlGenerator;
+import com.example.specgen.generator.PostgreSqlGenerator;
 import com.example.specgen.generator.RepositoryGenerator;
 import com.example.specgen.model.Entity;
 import com.example.specgen.parser.YamlParser;
@@ -39,7 +39,7 @@ public class SpecService{
         Map<String,String> files = new HashMap<>();
         
         List<Generator> generators = List.of(
-            new PostgresSqlGenerator(spec),
+            new PostgreSqlGenerator(spec),
             new EntityGenerator(spec), 
             new ControllerGenerator(spec), 
             new RepositoryGenerator(spec)

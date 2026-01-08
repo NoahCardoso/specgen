@@ -17,7 +17,7 @@ public class RepositoryGenerator implements Generator{
 	public void generate(){
 		RepositoryWriter writer = new RepositoryWriter(new StringBuilder());
 		JavaFormatter jf = new JavaFormatter();
-		this.filename = spec.getEntity() + "Repository.java";
+		this.filename = spec.getName() + "Repository.java";
 
 		String primaryKeyType = "";
 		
@@ -29,24 +29,18 @@ public class RepositoryGenerator implements Generator{
 
 		}
 		
-		writer.createRepository(spec.getMvnPackage(), spec.getEntity(), primaryKeyType);
+		writer.createRepository(spec.getMvnPackage(), spec.getName(), primaryKeyType);
 
 		this.content = writer.getStringFile();
 		
 	}
 	@Override
 	public String getContent(){
-		if (content.isEmpty()){
-			//error
-		}
 		return content;
 	}
 
 	@Override
 	public String getName(){
-		if (filename.isEmpty()){
-			//error
-		}
 		return filename;
 	}
 	

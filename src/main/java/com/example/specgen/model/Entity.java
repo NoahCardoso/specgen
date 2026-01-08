@@ -13,13 +13,29 @@ public class Entity{
 	private boolean delete;
 	private String mvnPackage;
 
-    public Entity(){}
+	public Entity(){}
 
-	public String getEntity() {
+    public Entity(String entity, String table, Map<String, Field> fields, boolean create, boolean read, boolean update, boolean delete){
+		this.entity = entity;
+		this.table = table;
+		this.setFields(fields);
+		this.create = create;
+		this.read = read;
+		this.update = update;
+		this.delete = delete;
+	}
+
+	public Entity(String entity, String table, Map<String, Field> fields){
+		this.entity = entity;
+		this.table = table;
+		this.setFields(fields);
+	}
+
+	public String getName() {
         return entity;
     }
 
-    public void setEntity(String entity) {
+    public void setName(String entity) {
         this.entity = entity;
     }
 
@@ -79,7 +95,7 @@ public class Entity{
         return mvnPackage;
     }
 
-    public void setPackage(String mvnPackage) {
+    public void setMvnPackage(String mvnPackage) {
         this.mvnPackage = mvnPackage;
     }
 

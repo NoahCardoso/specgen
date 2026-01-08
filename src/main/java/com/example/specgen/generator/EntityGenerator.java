@@ -15,7 +15,7 @@ public class EntityGenerator implements Generator{
 	public void generate(){
 		EntityWriter writer = new EntityWriter(new StringBuilder());
 		JavaFormatter jf = new JavaFormatter();
-		this.filename = spec.getEntity() + ".java";
+		this.filename = spec.getName() + ".java";
 		writer.addConstructor();
 		for (String key: spec.getFields().keySet()){
 			Field field = spec.getFields().get(key);
@@ -25,24 +25,18 @@ public class EntityGenerator implements Generator{
 			writer.addSetter(type, key);
 
 		}
-		writer.createClass(spec.getMvnPackage(), spec.getEntity(), spec.getTable());
+		writer.createClass(spec.getMvnPackage(), spec.getName(), spec.getTable());
 		this.content = writer.getStringFile();
 
 	}
 
 	@Override
 	public String getContent(){
-		if (content.isEmpty()){
-			//error
-		}
 		return content;
 	}
 
 	@Override
 	public String getName(){
-		if (filename.isEmpty()){
-			//error
-		}
 		return filename;
 	}
 	
