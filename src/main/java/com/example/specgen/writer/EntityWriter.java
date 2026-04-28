@@ -1,6 +1,8 @@
 package com.example.specgen.writer;
 import org.springframework.util.StringUtils;
 
+import com.example.specgen.model.Field;
+
 public class EntityWriter{
 	private final StringBuilder stringFile;
 
@@ -16,8 +18,23 @@ public class EntityWriter{
 	}
 	
 	//addGlobal
-	public void addGlobal(String type, String name){
-		stringFile.insert(0,"private "+type+" "+name+";\n");
+	public void addGlobal(String name, Field field){
+		String type = field.getType();
+		if (field.isPrimary()){
+			stringFile.append("@Id\n");
+			stringFile.append("@GeneratedValue\n");
+		}
+		if (field.isUnique() || !(field.isNullable())){
+			stringFile.append("@Column(");
+			if (field.isUnique()){
+				stringFile.append("unique = true, ");
+			}
+			if (!(field.isNullable())){
+				stringFile.append("nullable = false");
+			}
+			stringFile.append(")\n");
+		}
+		stringFile.append("private "+type+" "+name+";\n");
 	}
 
 	public void addConstructor(){
@@ -25,8 +42,8 @@ public class EntityWriter{
 	}
 	
 	//addGetter
-	public void addGetter(String type, String name){
-		
+	public void addGetter(String name, Field field){
+		String type = field.getType();
 		stringFile.append("public ")
                     .append(type)
                     .append(" get")
@@ -38,7 +55,8 @@ public class EntityWriter{
 					.append("}\n\n");
 	}
 	//addSetter
-	public void addSetter(String type, String name){
+	public void addSetter(String name, Field field){
+		String type = field.getType();
 		stringFile.append("public void set")
                     .append(StringUtils.capitalize(name)).append("(")
                     .append(type)

@@ -17,15 +17,15 @@ public class EntityGenerator implements Generator{
 		JavaFormatter jf = new JavaFormatter();
 		this.filename = spec.getName() + ".java";
 		writer.addConstructor();
-		for (String key: spec.getFields().keySet()){
-			Field field = spec.getFields().get(key);
+		for (String name: spec.getFields().keySet()){
+			Field field = spec.getFields().get(name);
 			String type = jf.getJavaType(field);
-			writer.addGlobal(type, key);
-			writer.addGetter(type, key);
-			writer.addSetter(type, key);
+			writer.addGlobal(name, field);
+			writer.addGetter(name, field);
+			writer.addSetter(name, field);
 
 		}
-		writer.createClass(spec.getMvnPackage(), spec.getName(), spec.getTable());
+		writer.createClass(spec.getPackage(), spec.getName(), spec.getTable());
 		this.content = writer.getStringFile();
 
 	}

@@ -20,7 +20,7 @@ public class SpecService{
 
     public Map<String,String> process(String yaml) throws Exception{
         Entity spec = YamlParser.parse(yaml);
-        if (validate(spec)){
+        if (!validate(spec)){
             throw new Exception("Invalid yaml format");
         }
 
