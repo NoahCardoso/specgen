@@ -1,12 +1,12 @@
 package com.example.specgen.model;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Entity{
 	private String entity;
 	private String table;
-	private HashMap<String, Field> fields;
+	private LinkedHashMap<String, Field> fields;
 	private boolean create;
 	private boolean read;
 	private boolean update;
@@ -15,21 +15,21 @@ public class Entity{
 
 	public Entity(){}
 
-    public Entity(String entity, String table, Map<String, Field> fields, boolean create, boolean read, boolean update, boolean delete){
-		this.entity = entity;
-		this.table = table;
-		this.setFields(fields);
-		this.create = create;
-		this.read = read;
-		this.update = update;
-		this.delete = delete;
-	}
+    // public Entity(String entity, String table, Map<String, Field> fields, boolean create, boolean read, boolean update, boolean delete){
+	// 	this.entity = entity;
+	// 	this.table = table;
+	// 	this.setFields(fields);
+	// 	this.create = create;
+	// 	this.read = read;
+	// 	this.update = update;
+	// 	this.delete = delete;
+	// }
 
-	public Entity(String entity, String table, Map<String, Field> fields){
-		this.entity = entity;
-		this.table = table;
-		this.setFields(fields);
-	}
+	// public Entity(String entity, String table, Map<String, Field> fields){
+	// 	this.entity = entity;
+	// 	this.table = table;
+	// 	this.setFields(fields);
+	// }
 
 	public String getName() {
         return entity;
@@ -48,12 +48,12 @@ public class Entity{
     }
 
     public Map<String, Field> getFields() {
-		Map<String, Field> copy = (HashMap<String, Field>)fields.clone();
+		Map<String, Field> copy = (LinkedHashMap<String, Field>)fields.clone();
         return copy;
     }
 
     public void setFields(Map<String, Field> fields) {
-		this.fields = new HashMap<>();
+		this.fields = new LinkedHashMap<>();
         for (String key: fields.keySet()){
 			this.fields.put(key, fields.get(key));
 		}
@@ -91,11 +91,11 @@ public class Entity{
 		this.delete = delete;
 	}
 
-	public String getMvnPackage() {
+	public String getPackage() {
         return mvnPackage;
     }
 
-    public void setMvnPackage(String mvnPackage) {
+    public void setPackage(String mvnPackage) {
         this.mvnPackage = mvnPackage;
     }
 

@@ -29,7 +29,7 @@ public class RepositoryGenerator implements Generator{
 
 		}
 		
-		writer.createRepository(spec.getMvnPackage(), spec.getName(), primaryKeyType);
+		writer.createRepository(spec.getPackage(), spec.getName(), primaryKeyType);
 
 		this.content = writer.getStringFile();
 		

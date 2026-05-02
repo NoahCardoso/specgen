@@ -51,7 +51,7 @@ public class ControllerGenerator implements Generator{
 			writer.addDeleteRoute(spec.getName(), primaryKeyType, primaryKey);
 		}
 		
-		writer.createClass(spec.getMvnPackage(), spec.getName(), spec.getTable());
+		writer.createClass(spec.getPackage(), spec.getName(), spec.getTable());
 		this.content = writer.getStringFile();
 	}
 
