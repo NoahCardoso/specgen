@@ -18,9 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.example.specgen.service.SpecService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/spec")
 public class Controller {
+
+    private static final Logger log = LoggerFactory.getLogger(Controller.class);
+
 	private final SpecService service;
 
     public Controller(SpecService service) {
@@ -51,7 +58,7 @@ public class Controller {
                         zip.closeEntry();
                     }
                 } catch (IOException e) {
-                    
+                    log.error("Unexpected error processing spec request", e);
                     throw new RuntimeException("Error writing zip output");
                 }
             };
@@ -62,7 +69,7 @@ public class Controller {
                     .body(stream);
 
         } catch (Exception e) {
-        
+            log.error("Validation failed for spec request: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(outputStream -> outputStream.write(e.toString().getBytes()));
         }

@@ -15,14 +15,21 @@ import com.example.specgen.model.Entity;
 import com.example.specgen.parser.YamlParser;
 import com.example.specgen.validator.SpecValidator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class SpecService{
+    
+    private static final Logger log = LoggerFactory.getLogger(SpecService.class);
 
     public Map<String,String> process(String yaml) throws Exception{
         Entity spec = YamlParser.parse(yaml);
         if (!validate(spec)){
             throw new Exception("Invalid yaml format");
         }
+
+        log.info("yaml has been parsed into the service");
 
         return generate(spec);
 
@@ -38,6 +45,8 @@ public class SpecService{
     public Map<String,String> generate(Entity spec){
         Map<String,String> files = new HashMap<>();
         
+        log.info("Starting spec generation");
+
         List<Generator> generators = List.of(
             new PostgreSqlGenerator(spec),
             new EntityGenerator(spec), 
