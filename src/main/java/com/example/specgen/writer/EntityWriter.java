@@ -32,7 +32,11 @@ public class EntityWriter{
 			if (!(field.isNullable())){
 				stringFile.append("nullable = false");
 			}
+			if(stringFile.substring(stringFile.length()-1,stringFile.length()).equals(", ")){
+				stringFile.delete(stringFile.length()-1,stringFile.length());
+			}
 			stringFile.append(")\n");
+			
 		}
 		stringFile.append("private "+type+" "+name+";\n");
 	}
