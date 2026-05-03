@@ -3,7 +3,7 @@ import com.example.specgen.formatter.JavaFormatter;
 import com.example.specgen.model.Entity;
 import com.example.specgen.model.Field;
 import com.example.specgen.writer.RepositoryWriter;
-
+import freemarker.template.Configuration;
 public class RepositoryGenerator implements Generator{
 	private final Entity spec;
 	private String filename;
@@ -14,24 +14,15 @@ public class RepositoryGenerator implements Generator{
 	}
 
 	@Override
-	public void generate(){
-		RepositoryWriter writer = new RepositoryWriter(new StringBuilder());
-		JavaFormatter jf = new JavaFormatter();
+	public void generate() throws Exception{
+		Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
+		cfg.setClassForTemplateLoading(getClass(), "/templates");
+		cfg.setDefaultEncoding("UTF-8");
+
+		RepositoryWriter writer = new RepositoryWriter(cfg);
+
 		this.filename = spec.getName() + "Repository.java";
-
-		String primaryKeyType = "";
-		
-		for (String key: spec.getFields().keySet()){
-			Field field = spec.getFields().get(key);
-			if (field.isPrimary()){
-				primaryKeyType = jf.toNonPrimitiveType(jf.getJavaType(field));
-			}
-
-		}
-		
-		writer.createRepository(spec.getPackage(), spec.getName(), primaryKeyType);
-
-		this.content = writer.getStringFile();
+		this.content = writer.render(spec);
 		
 	}
 	@Override

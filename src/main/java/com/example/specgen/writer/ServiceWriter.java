@@ -6,19 +6,19 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 import com.example.specgen.model.Entity;
 import com.example.specgen.model.Field;
-import freemarker.template.Template;
 
-public class ControllerWriter{
+public class ServiceWriter{
 	private final Configuration cfg;
 
-	public ControllerWriter(Configuration cfg){
+	public ServiceWriter(Configuration cfg){
 		this.cfg = cfg;
 	}
 
     public String render(Entity entity) throws Exception {
-        Template template = cfg.getTemplate("controller.ftl");
+        Template template = cfg.getTemplate("service.ftl");
 
         Map<String, Object> model = new HashMap<>();
 		model.put("package", entity.getPackage());

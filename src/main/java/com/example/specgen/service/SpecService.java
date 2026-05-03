@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.example.specgen.generator.ExceptionHandlerGenerator;
+import com.example.specgen.generator.ServiceGenerator;
 
 @Service
 public class SpecService{
@@ -33,6 +34,8 @@ public class SpecService{
 
         log.info("yaml has been parsed into the service");
 
+        // use jf and pf to clean data here
+
         return generate(spec);
 
     }
@@ -44,7 +47,7 @@ public class SpecService{
         
     }
 
-    public Map<String,String> generate(Entity spec){
+    public Map<String,String> generate(Entity spec) throws Exception{
         Map<String,String> files = new HashMap<>();
         
         log.info("Starting spec generation");
@@ -53,6 +56,7 @@ public class SpecService{
         generators = List.of(
                 new PostgreSqlGenerator(spec),
                 new EntityGenerator(spec),
+                new ServiceGenerator(spec),
                 new ControllerGenerator(spec),
                 new RepositoryGenerator(spec),
                 new ExceptionHandlerGenerator(spec)
