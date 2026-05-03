@@ -35,11 +35,11 @@ public class ControllerWriter{
 		stringFile.append("@GetMapping\npublic List<"+entity+"> getAll() {\nreturn repo.findAll();\n}\n\n");
 	}
 	public void addGetOneRoute(String entity, String primaryKeyType, String primaryKey){
-		stringFile.append("@GetMapping(\"/{"+primaryKey+"}\")\npublic "+entity+" getOne(@PathVariable "+primaryKeyType+" "+primaryKey+") {\nreturn repo.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());\n}\n\n");
+		stringFile.append("@GetMapping(\"/{"+primaryKey+"}\")\npublic "+entity+" getOne(@PathVariable "+primaryKeyType+" "+primaryKey+") {\nreturn repo.findById("+primaryKey+");\n}\n\n");
 	}
 	public void addUpdateRoute(String entity, String primaryKeyType, String primaryKey, Map<String, Field> fields){
 		stringFile.append("@PutMapping(\"/{"+primaryKey+"}\")\npublic "+entity+" update(@PathVariable "+primaryKeyType+" "+primaryKey+", @RequestBody "+entity+" updated) {\n")
-		.append(entity+" "+entity.toLowerCase()+" = repo.map(existing -> { ...setters...; return ResponseEntity.ok(repo.save(existing)); }).orElse(ResponseEntity.notFound().build());\n");
+		.append(entity+" "+entity.toLowerCase()+" = repo.findById("+primaryKey+");\n");
 		for (String key: fields.keySet()){
 			if(fields.get(key).isPrimary()){
 				continue;

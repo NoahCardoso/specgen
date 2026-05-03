@@ -18,6 +18,8 @@ import com.example.specgen.validator.SpecValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.specgen.generator.ExceptionHandlerGenerator;
+
 @Service
 public class SpecService{
     
@@ -47,11 +49,13 @@ public class SpecService{
         
         log.info("Starting spec generation");
 
-        List<Generator> generators = List.of(
-            new PostgreSqlGenerator(spec),
-            new EntityGenerator(spec), 
-            new ControllerGenerator(spec), 
-            new RepositoryGenerator(spec)
+        List<Generator> generators;
+        generators = List.of(
+                new PostgreSqlGenerator(spec),
+                new EntityGenerator(spec),
+                new ControllerGenerator(spec),
+                new RepositoryGenerator(spec),
+                new ExceptionHandlerGenerator(spec)
         );
 
         for (Generator generator: generators){
