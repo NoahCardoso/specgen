@@ -1,31 +1,42 @@
 package com.example.specgen.generator;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.example.specgen.formatter.JavaFormatter;
 import com.example.specgen.model.Entity;
 import com.example.specgen.model.Field;
 import com.example.specgen.writer.ControllerWriter;
+import com.example.specgen.writer.TemplateWriter;
+
 import freemarker.template.Configuration;
 
 public class ServiceGenerator implements Generator{
-	private final Entity spec;
-	private String filename = "";
-	private String content = "";
+	private final TemplateWriter writer;
+    private final JavaFormatter formatter;
+    private Entity entity;
+    private String content;
 
-	public ServiceGenerator(Entity spec){
-		this.spec = spec;
-	}
+    public ServiceGenerator(TemplateWriter writer, JavaFormatter formatter) {
+        this.writer = writer;
+        this.formatter = formatter;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
 
 	@Override
 	public void generate() throws Exception{
 
-		Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
-		cfg.setClassForTemplateLoading(getClass(), "/templates");
-		cfg.setDefaultEncoding("UTF-8");
+		Map<String, Object> model = new HashMap<>();
+		model.put("package", entity.getPackage());
+        model.put("entity", entity.getName());
+		model.put("table", entity.getTable());
+		model.put("fields", entity.getFields());
+		model.put("primaryKey", entity.getPrimaryKey());
+		model.put("primaryKeyType", entity.getFields().get(entity.getPrimaryKey()).getType());
 
-		ControllerWriter writer = new ControllerWriter(cfg);
-		
-		this.filename = spec.getName() + "Service.java";
-		
-		this.content = writer.render(spec);
+		this.content = writer.render("service.ftl",model);
 	}
 
 	@Override
@@ -35,7 +46,7 @@ public class ServiceGenerator implements Generator{
 
 	@Override
 	public String getName(){
-		return filename;
+		return entity.getName() + "Service.java";
 	}
 	
 }

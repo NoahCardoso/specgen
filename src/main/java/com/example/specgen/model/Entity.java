@@ -15,22 +15,6 @@ public class Entity{
 
 	public Entity(){}
 
-    // public Entity(String entity, String table, Map<String, Field> fields, boolean create, boolean read, boolean update, boolean delete){
-	// 	this.entity = entity;
-	// 	this.table = table;
-	// 	this.setFields(fields);
-	// 	this.create = create;
-	// 	this.read = read;
-	// 	this.update = update;
-	// 	this.delete = delete;
-	// }
-
-	// public Entity(String entity, String table, Map<String, Field> fields){
-	// 	this.entity = entity;
-	// 	this.table = table;
-	// 	this.setFields(fields);
-	// }
-
 	public String getName() {
         return entity;
     }
@@ -58,6 +42,18 @@ public class Entity{
 			this.fields.put(key, fields.get(key));
 		}
     }
+
+	public String getPrimaryKey(){
+		for (Map.Entry<String, Field> entry : fields.entrySet()) {
+			String key = entry.getKey();
+			Field value = entry.getValue();
+
+			if (value.isPrimary()){
+				return key;
+			}
+		}
+		return "";
+	}
 	//
 	public boolean isCreate(){
 		return create;

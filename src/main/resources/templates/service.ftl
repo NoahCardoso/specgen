@@ -1,4 +1,4 @@
-package ${mvnPackage};
+package ${package};
 
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;

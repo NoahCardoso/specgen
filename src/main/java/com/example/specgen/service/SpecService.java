@@ -18,8 +18,13 @@ import com.example.specgen.validator.SpecValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.specgen.formatter.JavaFormatter;
+import com.example.specgen.formatter.PostgreSqlFormatter;
 import com.example.specgen.generator.ExceptionHandlerGenerator;
 import com.example.specgen.generator.ServiceGenerator;
+import com.example.specgen.writer.TemplateWriter;
+
+import freemarker.template.Configuration;
 
 @Service
 public class SpecService{
@@ -53,16 +58,24 @@ public class SpecService{
         log.info("Starting spec generation");
 
         List<Generator> generators;
+
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
+		cfg.setClassForTemplateLoading(getClass(), "/templates");
+		cfg.setDefaultEncoding("UTF-8");
+
+        TemplateWriter writer = new TemplateWriter(cfg);
+
         generators = List.of(
-                new PostgreSqlGenerator(spec),
-                new EntityGenerator(spec),
-                new ServiceGenerator(spec),
-                new ControllerGenerator(spec),
-                new RepositoryGenerator(spec),
-                new ExceptionHandlerGenerator(spec)
+                new PostgreSqlGenerator(writer, new PostgreSqlFormatter()),
+                new EntityGenerator(writer, new JavaFormatter()),
+                new ServiceGenerator(writer, new JavaFormatter()),
+                new ControllerGenerator(writer, new JavaFormatter()),
+                new RepositoryGenerator(writer, new JavaFormatter()),
+                new ExceptionHandlerGenerator(writer)
         );
 
         for (Generator generator: generators){
+            generator.setEntity(spec);
             generator.generate();
             files.put(generator.getName(), generator.getContent());
         }

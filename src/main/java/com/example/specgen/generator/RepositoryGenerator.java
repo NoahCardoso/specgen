@@ -1,28 +1,43 @@
 package com.example.specgen.generator;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.example.specgen.formatter.JavaFormatter;
 import com.example.specgen.model.Entity;
 import com.example.specgen.model.Field;
 import com.example.specgen.writer.RepositoryWriter;
+import com.example.specgen.writer.TemplateWriter;
+
 import freemarker.template.Configuration;
 public class RepositoryGenerator implements Generator{
-	private final Entity spec;
-	private String filename;
-	private String content;
+	private final TemplateWriter writer;
+    private final JavaFormatter formatter;
+    private Entity entity;
+    private String content;
 
-	public RepositoryGenerator(Entity spec){
-		this.spec = spec;
-	}
+    public RepositoryGenerator(TemplateWriter writer, JavaFormatter formatter) {
+        this.writer = writer;
+        this.formatter = formatter;
+    }
+
+    @Override
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
 
 	@Override
 	public void generate() throws Exception{
-		Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
-		cfg.setClassForTemplateLoading(getClass(), "/templates");
-		cfg.setDefaultEncoding("UTF-8");
 
-		RepositoryWriter writer = new RepositoryWriter(cfg);
-
-		this.filename = spec.getName() + "Repository.java";
-		this.content = writer.render(spec);
+        Map<String, Object> model = new HashMap<>();
+		model.put("package", entity.getPackage());
+        model.put("entity", entity.getName());
+		model.put("table", entity.getTable());
+		model.put("primaryKey", entity.getPrimaryKey());
+		model.put("primaryKeyType", formatter.toNonPrimitiveType(formatter.getJavaType(entity.getFields().get(entity.getPrimaryKey()))));
+		
+		this.content = writer.render("repository.ftl",model);
+        
 		
 	}
 	@Override
@@ -32,7 +47,7 @@ public class RepositoryGenerator implements Generator{
 
 	@Override
 	public String getName(){
-		return filename;
+		return entity.getName()+"Repository.Java";
 	}
 	
 }

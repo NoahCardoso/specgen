@@ -23,7 +23,6 @@ public class RepositoryWriter{
 		model.put("package", entity.getPackage());
         model.put("entity", entity.getName());
 		model.put("table", entity.getTable());
-		model.put("fields", entity.getFields());
 		model.put("primaryKey", entity.getPrimaryKey());
 		model.put("primaryKeyType", entity.getFields().get(entity.getPrimaryKey()).getType());
 		StringWriter out = new StringWriter();
