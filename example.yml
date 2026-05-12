@@ -1,4 +1,4 @@
-entity: User
+name: User
 table: users
 
 fields:
@@ -8,11 +8,11 @@ fields:
   email:
     type: String
     unique: true
-  passwordHash:
+  password:
     type: String
   age:
     type: int
-    nullable: true
+    nullable: false
 
 create: true
 read: true
