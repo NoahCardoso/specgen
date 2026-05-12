@@ -1,52 +1,49 @@
 package com.example.specgen.formatter;
 
+import org.springframework.stereotype.Component;
+
+import com.example.specgen.exception.UnsupportedTypeException;
 import com.example.specgen.model.Field;
 
-public class JavaFormatter{
-	public String getJavaType(Field field){
-		String type = field.getType().strip();
-		String javaType = "";
-		if (
-				type.toLowerCase().equals("int") || type.toLowerCase().equals("char") || 
-				type.toLowerCase().equals("character") || type.equals("String") ||
-				type.toLowerCase().equals("integer")
-			)
-		{
-			javaType = type;
-		}
-		else if (type.equals("uuid")){
-			javaType = "Long";
-		}
-		else if (type.equals("long") || type.equals("boolean") || type.equals("Long") || type.equals("Boolean")){
-			javaType = type;
-		}
-		else if (type.equals("string") ){
-			javaType = "String";
-		}
-		
-		return javaType;
-		
-	}
-	public String toNonPrimitiveType(String type){
-		type.strip();
-		if(type.isBlank() || type.isEmpty()){
-			return type;
-		}
-		String javaType = "";
-		if (type.equals("int")){
-			javaType = "Integer";
-		}
-		else if (type.equals("char")){
-			javaType = "Character";
-		}
-		else if (type.equals("boolean")){
-			javaType = "Boolean";
-		}
-		else if (type.equals("long")){
-			javaType = "Long";
-		}
-		
-		return javaType;
-		
-	}
+@Component
+public class JavaFormatter {
+
+    public String getJavaType(Field field) {
+        String type = field.getType().strip().toLowerCase();
+
+        return switch (type) {
+            case "string"    -> "String";
+            case "int",
+                 "integer"   -> "int";
+            case "long"      -> "long";
+            case "boolean",
+                 "bool"      -> "boolean";
+            case "char",
+                 "character" -> "char";
+            case "double"    -> "double";
+            case "float"     -> "float";
+            case "uuid"      -> "UUID";
+            default -> throw new UnsupportedTypeException(
+                    "Unsupported field type: '" + field.getType().strip() + "'"
+            );
+        };
+    }
+
+    public String toNonPrimitiveType(String type) {
+        type = type.strip(); 
+
+        if (type.isBlank()) { 
+            return type;
+        }
+
+        return switch (type) {
+            case "int"     -> "Integer";
+            case "char"    -> "Character";
+            case "boolean" -> "Boolean";
+            case "long"    -> "Long";
+            default -> throw new UnsupportedTypeException(
+                    "No boxed type for: '" + type + "'"
+            );
+        };
+    }
 }

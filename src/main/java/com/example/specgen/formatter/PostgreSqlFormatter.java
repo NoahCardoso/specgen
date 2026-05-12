@@ -1,6 +1,10 @@
 package com.example.specgen.formatter;
 
+import org.springframework.stereotype.Component;
+
 import com.example.specgen.model.Field;
+
+@Component
 public class PostgreSqlFormatter {
 
 

@@ -1,6 +1,7 @@
 package com.example.specgen.generator;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.example.specgen.formatter.JavaFormatter;
@@ -34,7 +35,18 @@ public class EntityGenerator implements Generator{
 		model.put("package", entity.getPackage());
         model.put("entity", entity.getName());
 		model.put("table", entity.getTable());
-		model.put("fields", entity.getFields());
+		Map<String,Field> formatedFields = new LinkedHashMap<>();
+		
+		for(String key: entity.getFields().keySet()){
+			Field field = entity.getFields().get(key);
+			Field formatedField = new Field();
+			formatedField.setNullable(field.isNullable());
+			formatedField.setPrimary(field.isPrimary());
+			formatedField.setUnique(field.isUnique());
+			formatedField.setType(formatter.getJavaType(field));
+			formatedFields.put(key,formatedField);
+		}
+        model.put("fields", formatedFields);
 		model.put("primaryKey", entity.getPrimaryKey());
 		model.put("primaryKeyType", entity.getFields().get(entity.getPrimaryKey()).getType());
 

@@ -2,9 +2,13 @@ package com.example.specgen.writer;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+
 import java.io.StringWriter;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class TemplateWriter {
 
     private final Configuration cfg;

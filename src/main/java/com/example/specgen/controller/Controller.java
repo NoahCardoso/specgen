@@ -1,26 +1,16 @@
 package com.example.specgen.controller;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
+import com.example.specgen.service.SpecService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import com.example.specgen.service.SpecService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/spec")
@@ -28,53 +18,32 @@ public class Controller {
 
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
 
-	private final SpecService service;
+    private final SpecService service;
 
     public Controller(SpecService service) {
         this.service = service;
     }
 
-	@PostMapping(
-		consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-	)
-	public ResponseEntity<StreamingResponseBody> uploadSpec(@RequestPart("spec") MultipartFile file) throws IOException {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte[]> uploadSpec(@RequestPart("spec") MultipartFile file) {
+        try {
+            String yaml = new String(file.getBytes(), StandardCharsets.UTF_8);
+            log.info("Received spec file: {}", file.getOriginalFilename());
 
-		String yaml = new String(file.getBytes(), StandardCharsets.UTF_8);
-
-		try {
-            // Assuming `service.process(yaml)` generates a Map of filenames and their respective content
-            Map<String, String> generatedStringFiles = service.process(yaml);
-            
-            StreamingResponseBody stream = outputStream -> {
-                try (ZipOutputStream zip = new ZipOutputStream(outputStream)) {
-                    // Loop through generated files and add them to the zip output stream
-                    for (Map.Entry<String, String> entry : generatedStringFiles.entrySet()) {
-                        String filename = entry.getKey();
-                        String content = entry.getValue();
-
-                        ZipEntry zipEntry = new ZipEntry(filename);
-                        zip.putNextEntry(zipEntry);
-                        zip.write(content.getBytes(StandardCharsets.UTF_8));
-                        zip.closeEntry();
-                    }
-                } catch (IOException e) {
-                    log.error("Unexpected error processing spec request", e);
-                    throw new RuntimeException("Error writing zip output");
-                }
-            };
+            byte[] zip = service.generate(yaml);
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"export.zip\"")
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(stream);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"export.zip\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(zip);
+
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid spec submitted: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         } catch (Exception e) {
-            log.error("Validation failed for spec request: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(outputStream -> outputStream.write(e.toString().getBytes()));
+            log.error("Unexpected error processing spec", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-	
-
 }

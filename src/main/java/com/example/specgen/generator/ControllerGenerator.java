@@ -58,7 +58,7 @@ public class ControllerGenerator implements Generator{
 
 	@Override
 	public String getName(){
-		return entity.getName() + "Controller.Java";
+		return entity.getName() + "Controller.java";
 	}
 	
 }

@@ -47,7 +47,7 @@ public class RepositoryGenerator implements Generator{
 
 	@Override
 	public String getName(){
-		return entity.getName()+"Repository.Java";
+		return entity.getName()+"Repository.java";
 	}
 	
 }
