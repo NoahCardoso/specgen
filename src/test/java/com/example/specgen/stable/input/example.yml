@@ -1,0 +1,22 @@
+name: User
+table: users
+
+fields:
+  id:
+    type: long
+    primary: true
+  email:
+    type: String
+    unique: true
+  password:
+    type: String
+  age:
+    type: int
+    nullable: false
+
+create: true
+read: true
+update: true
+delete: true
+
+package: com.example.specgen.stable.expected
