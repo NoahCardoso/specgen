@@ -16,11 +16,18 @@ public class ServiceGenerator implements Generator{
     private Entity entity;
     private String content;
 
-    public ServiceGenerator(TemplateWriter writer, JavaFormatter formatter) {
+    public ServiceGenerator(TemplateWriter writer, JavaFormatter formatter, Entity entity) {
+        this.writer = writer;
+        this.formatter = formatter;
+		this.entity = entity;
+    }
+
+	public ServiceGenerator(TemplateWriter writer, JavaFormatter formatter) {
         this.writer = writer;
         this.formatter = formatter;
     }
 
+	@Override
     public void setEntity(Entity entity) {
         this.entity = entity;
     }

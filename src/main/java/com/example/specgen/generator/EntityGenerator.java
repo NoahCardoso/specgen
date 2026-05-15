@@ -18,11 +18,18 @@ public class EntityGenerator implements Generator{
     private Entity entity;
     private String content;
 
-    public EntityGenerator(TemplateWriter writer, JavaFormatter formatter) {
+    public EntityGenerator(TemplateWriter writer, JavaFormatter formatter, Entity entity) {
+        this.writer = writer;
+        this.formatter = formatter;
+		this.entity = entity;
+    }
+
+	public EntityGenerator(TemplateWriter writer, JavaFormatter formatter) {
         this.writer = writer;
         this.formatter = formatter;
     }
 
+    @Override
     public void setEntity(Entity entity) {
         this.entity = entity;
     }

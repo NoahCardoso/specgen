@@ -16,7 +16,12 @@ public class ExceptionHandlerGenerator implements Generator{
     private Entity entity;
     private String content;
 
-    public ExceptionHandlerGenerator(TemplateWriter writer) {
+    public ExceptionHandlerGenerator(TemplateWriter writer, Entity entity) {
+        this.writer = writer;
+		this.entity = entity;
+    }
+
+	public ExceptionHandlerGenerator(TemplateWriter writer) {
         this.writer = writer;
     }
 

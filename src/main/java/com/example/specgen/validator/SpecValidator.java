@@ -11,6 +11,12 @@ public class SpecValidator {
     private final PostgreSqlFormatter postgreSqlFormatter;
     private Entity spec;
 
+    public SpecValidator(JavaFormatter javaFormatter, PostgreSqlFormatter postgreSqlFormatter, Entity spec) {
+        this.javaFormatter = javaFormatter;
+        this.postgreSqlFormatter = postgreSqlFormatter;
+        this.spec = spec;
+    }
+
     public SpecValidator(JavaFormatter javaFormatter, PostgreSqlFormatter postgreSqlFormatter) {
         this.javaFormatter = javaFormatter;
         this.postgreSqlFormatter = postgreSqlFormatter;

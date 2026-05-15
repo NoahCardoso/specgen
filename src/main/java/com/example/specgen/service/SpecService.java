@@ -38,8 +38,7 @@ public class SpecService {
         Entity spec = YamlParser.parse(yaml);
 
         log.info("Validating spec");
-        SpecValidator validator = new SpecValidator(javaFormatter, postgreSqlFormatter);
-        validator.setSpec(spec);
+        SpecValidator validator = new SpecValidator(javaFormatter, postgreSqlFormatter, spec);
         if (!validator.check()) {
             throw new IllegalArgumentException("Invalid yaml format");
         }
@@ -53,16 +52,15 @@ public class SpecService {
     // public so StableTest can call it directly
     public List<Generator> buildGenerators(Entity spec) throws Exception {
         List<Generator> generators = List.of(
-            new PostgreSqlGenerator(writer, postgreSqlFormatter),
-            new EntityGenerator(writer, javaFormatter),
-            new ServiceGenerator(writer, javaFormatter),
-            new ControllerGenerator(writer, javaFormatter),
-            new RepositoryGenerator(writer, javaFormatter),
-            new ExceptionHandlerGenerator(writer)
+            new PostgreSqlGenerator(writer, postgreSqlFormatter, spec),
+            new EntityGenerator(writer, javaFormatter, spec),
+            new ServiceGenerator(writer, javaFormatter, spec),
+            new ControllerGenerator(writer, javaFormatter, spec),
+            new RepositoryGenerator(writer, javaFormatter, spec),
+            new ExceptionHandlerGenerator(writer, spec)
         );
 
         for (Generator generator : generators) {
-            generator.setEntity(spec);
             generator.generate();
         }
 

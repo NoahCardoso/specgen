@@ -15,7 +15,13 @@ public class RepositoryGenerator implements Generator{
     private Entity entity;
     private String content;
 
-    public RepositoryGenerator(TemplateWriter writer, JavaFormatter formatter) {
+    public RepositoryGenerator(TemplateWriter writer, JavaFormatter formatter, Entity entity) {
+        this.writer = writer;
+        this.formatter = formatter;
+		this.entity = entity;
+    }
+
+	public RepositoryGenerator(TemplateWriter writer, JavaFormatter formatter) {
         this.writer = writer;
         this.formatter = formatter;
     }

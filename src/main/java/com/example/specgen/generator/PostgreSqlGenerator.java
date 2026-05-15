@@ -19,6 +19,12 @@ public class PostgreSqlGenerator implements Generator {
     private Entity entity;
     private String content;
 
+    public PostgreSqlGenerator(TemplateWriter writer, PostgreSqlFormatter formatter, Entity entity) {
+        this.writer = writer;
+        this.formatter = formatter;
+        this.entity = entity;
+    }
+
     public PostgreSqlGenerator(TemplateWriter writer, PostgreSqlFormatter formatter) {
         this.writer = writer;
         this.formatter = formatter;
