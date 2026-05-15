@@ -7,11 +7,13 @@ import com.example.specgen.model.Entity;
 import com.example.specgen.parser.YamlParser;
 import com.example.specgen.validator.SpecValidator;
 import com.example.specgen.writer.TemplateWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -35,18 +37,21 @@ public class SpecService {
 
     public byte[] generate(String yaml) throws Exception {
         log.info("Parsing yaml");
-        Entity spec = YamlParser.parse(yaml);
+        List<Entity> entities = YamlParser.parse(yaml);
+        List<Generator> generators = new ArrayList<>();
+        for (Entity spec: entities){
+            log.info("Validating spec");
+            SpecValidator validator = new SpecValidator(javaFormatter, postgreSqlFormatter, spec);
+            if (!validator.check()) {
+                throw new IllegalArgumentException("Invalid yaml format");
+            }
 
-        log.info("Validating spec");
-        SpecValidator validator = new SpecValidator(javaFormatter, postgreSqlFormatter, spec);
-        if (!validator.check()) {
-            throw new IllegalArgumentException("Invalid yaml format");
+            log.info("Starting generation for entity: {}", spec.getName());
+            generators.addAll(buildGenerators(spec));
+            
         }
-
-        log.info("Starting generation for entity: {}", spec.getName());
-        List<Generator> generators = buildGenerators(spec);
-
         return buildZip(generators);
+        
     }
 
     // public so StableTest can call it directly
