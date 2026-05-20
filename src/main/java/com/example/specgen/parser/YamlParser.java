@@ -1,6 +1,7 @@
 package com.example.specgen.parser;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.LoaderOptions;
@@ -9,18 +10,26 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import com.example.specgen.model.Entity;
+import com.example.specgen.model.EntityWrapper;
 
 @Component
 public class YamlParser {
 
-    public static List<Entity> parse(String yamlContent) {
+    public static EntityWrapper parse(String yamlContent) {
         LoaderOptions options = new LoaderOptions();
 
-        TypeDescription listType = new TypeDescription(EntityWrapper.class);
-        listType.addPropertyParameters("entities", Entity.class);
+        Constructor constructor =
+                new Constructor(EntityWrapper.class, options);
 
-        Constructor constructor = new Constructor(List.class, options);
-        constructor.addTypeDescription(listType);
+        TypeDescription wrapperDesc =
+                new TypeDescription(EntityWrapper.class);
+
+        wrapperDesc.addPropertyParameters(
+                "entities",
+                Entity.class
+        );
+
+        constructor.addTypeDescription(wrapperDesc);
 
         Yaml yaml = new Yaml(constructor);
 

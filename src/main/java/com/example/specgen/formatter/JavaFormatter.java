@@ -23,6 +23,7 @@ public class JavaFormatter {
             case "double"    -> "double";
             case "float"     -> "float";
             case "uuid"      -> "UUID";
+            case "relation"  -> "relation";
             default -> throw new UnsupportedTypeException(
                     "Unsupported field type: '" + field.getType().strip() + "'"
             );

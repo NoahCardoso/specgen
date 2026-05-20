@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.example.specgen.model.EntityWrapper;
+
 @Service
 public class SpecService {
 
@@ -37,10 +39,16 @@ public class SpecService {
 
     public byte[] generate(String yaml) throws Exception {
         log.info("Parsing yaml");
-        List<Entity> entities = YamlParser.parse(yaml);
+        EntityWrapper entities = YamlParser.parse(yaml);
         List<Generator> generators = new ArrayList<>();
-        for (Entity spec: entities){
+        for (Entity spec: entities.getAll()){
             log.info("Validating spec");
+            log.info(spec.getName());
+            spec.getFields().forEach((name, field) -> {
+    log.info("Field: {} | type: {} | isRelation: {} | relationType: {} | ref: {} | joinColumn: {}",
+        name, field.getType(), field.isRelation(),
+        field.getRelationType(), field.getRef(), field.getJoinColumn());
+});
             SpecValidator validator = new SpecValidator(javaFormatter, postgreSqlFormatter, spec);
             if (!validator.check()) {
                 throw new IllegalArgumentException("Invalid yaml format");
@@ -57,12 +65,12 @@ public class SpecService {
     // public so StableTest can call it directly
     public List<Generator> buildGenerators(Entity spec) throws Exception {
         List<Generator> generators = List.of(
-            new PostgreSqlGenerator(writer, postgreSqlFormatter, spec),
+            // new PostgreSqlGenerator(writer, postgreSqlFormatter, spec),
             new EntityGenerator(writer, javaFormatter, spec),
             new ServiceGenerator(writer, javaFormatter, spec),
             new ControllerGenerator(writer, javaFormatter, spec),
-            new RepositoryGenerator(writer, javaFormatter, spec),
-            new ExceptionHandlerGenerator(writer, spec)
+            new RepositoryGenerator(writer, javaFormatter, spec)//,
+            // new ExceptionHandlerGenerator(writer, spec)
         );
 
         for (Generator generator : generators) {

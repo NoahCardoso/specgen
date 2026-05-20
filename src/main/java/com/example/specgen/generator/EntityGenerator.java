@@ -42,18 +42,21 @@ public class EntityGenerator implements Generator{
 		model.put("package", entity.getPackage());
         model.put("entity", entity.getName());
 		model.put("table", entity.getTable());
-		Map<String,Field> formatedFields = new LinkedHashMap<>();
+		Map<String,Field> formattedFields = new LinkedHashMap<>();
 		
 		for(String key: entity.getFields().keySet()){
 			Field field = entity.getFields().get(key);
-			Field formatedField = new Field();
-			formatedField.setNullable(field.isNullable());
-			formatedField.setPrimary(field.isPrimary());
-			formatedField.setUnique(field.isUnique());
-			formatedField.setType(formatter.getJavaType(field));
-			formatedFields.put(key,formatedField);
+			Field formattedField = new Field();
+			formattedField.setNullable(field.isNullable());
+			formattedField.setPrimary(field.isPrimary());
+			formattedField.setUnique(field.isUnique());
+			formattedField.setType(formatter.getJavaType(field));
+			formattedField.setRelationType(field.getRelationType());
+			formattedField.setRef(field.getRef());
+			formattedField.setJoinColumn(field.getJoinColumn());
+			formattedFields.put(key,formattedField);
 		}
-        model.put("fields", formatedFields);
+        model.put("fields", formattedFields);
 		model.put("primaryKey", entity.getPrimaryKey());
 		model.put("primaryKeyType", entity.getFields().get(entity.getPrimaryKey()).getType());
 

@@ -1,7 +1,6 @@
 package com.example.specgen.writer;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import freemarker.template.Template;
 import org.springframework.util.StringUtils;
 import freemarker.template.Configuration;

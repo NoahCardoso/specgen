@@ -5,6 +5,10 @@ public class Field{
     private boolean primary;
     private boolean unique;
     private boolean nullable = true;
+	private String ref;
+    private String joinColumn;
+	private String relationType;
+	private boolean relation;
 
 	public Field(){}
 
@@ -14,6 +18,31 @@ public class Field{
 
 	public void setType(String type){
 		this.type = type;
+		this.relation = "relation".equals(type);
+	}
+
+	public String getRef(){
+		return ref;
+	}
+
+	public void setRef(String ref){
+		this.ref = ref;
+	}
+
+	public String getJoinColumn(){
+		return joinColumn;
+	}
+
+	public void setJoinColumn(String joinColumn){
+		this.joinColumn = joinColumn;
+	}
+
+	public String getRelationType(){
+		return relationType;
+	}
+
+	public void setRelationType(String relationType){
+		this.relationType = relationType;
 	}
 
 	public boolean isPrimary(){
@@ -38,6 +67,10 @@ public class Field{
 
 	public void setNullable(boolean nullable){
 		this.nullable = nullable;
+	}
+
+	public boolean isRelation() {
+		return "relation".equals(type);
 	}
 
 	
