@@ -69,7 +69,10 @@ public class SpecService {
             new EntityGenerator(writer, javaFormatter, spec),
             new ServiceGenerator(writer, javaFormatter, spec),
             new ControllerGenerator(writer, javaFormatter, spec),
-            new RepositoryGenerator(writer, javaFormatter, spec)//,
+            new RepositoryGenerator(writer, javaFormatter, spec),
+            new RequestDtoGenerator(writer, javaFormatter, spec),
+            new ResponseDtoGenerator(writer, javaFormatter, spec)
+            //,
             // new ExceptionHandlerGenerator(writer, spec)
         );
 

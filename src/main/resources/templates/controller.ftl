@@ -1,25 +1,30 @@
 package ${package};
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-
 import java.util.List;
-
 @RestController
 @RequestMapping("/${table}")
 public class ${entity}Controller {
-
     private final ${entity}Service service;
-
     public ${entity}Controller(${entity}Service service) {
         this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<${entity}> create(@Valid @RequestBody ${entity} ${entity?uncap_first}) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(${entity?uncap_first}));
+    public ResponseEntity<${entity}> create(
+            @Valid @RequestBody ${entity} ${entity?uncap_first}<#rt>
+<#list fields as fieldName, field>
+<#if field.relation && (field.relationType == "ManyToOne" || field.relationType == "OneToOne")>,
+            @RequestParam Long ${field.ref?uncap_first}Id<#rt>
+</#if>
+</#list>) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(${entity?uncap_first}<#rt>
+<#list fields as fieldName, field>
+<#if field.relation && (field.relationType == "ManyToOne" || field.relationType == "OneToOne")>, ${field.ref?uncap_first}Id<#rt>
+</#if>
+</#list>));
     }
 
     @GetMapping
@@ -35,9 +40,17 @@ public class ${entity}Controller {
     @PutMapping("/{${primaryKey}}")
     public ResponseEntity<${entity}> update(
             @PathVariable ${primaryKeyType} ${primaryKey},
-            @Valid @RequestBody ${entity} updated
-    ) {
-        return ResponseEntity.ok(service.update(${primaryKey}, updated));
+            @Valid @RequestBody ${entity} updated<#rt>
+<#list fields as fieldName, field>
+<#if field.relation && (field.relationType == "ManyToOne" || field.relationType == "OneToOne")>,
+            @RequestParam Long ${field.ref?uncap_first}Id<#rt>
+</#if>
+</#list>) {
+        return ResponseEntity.ok(service.update(${primaryKey}, updated<#rt>
+<#list fields as fieldName, field>
+<#if field.relation && (field.relationType == "ManyToOne" || field.relationType == "OneToOne")>, ${field.ref?uncap_first}Id<#rt>
+</#if>
+</#list>));
     }
 
     @DeleteMapping("/{${primaryKey}}")
